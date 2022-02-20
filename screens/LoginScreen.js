@@ -45,25 +45,25 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 32
+    fontSize: 32,
   },
   inputRow: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   container: {
-    flex: 1
+    flex: 1,
   },
   loginInput: {
     height: 50,
     width: "75%",
     marginRight: 16,
     backgroundColor: "white",
-    borderRadius: 10
+    borderRadius: 10,
   },
   backgroundImg: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

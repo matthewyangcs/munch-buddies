@@ -6,7 +6,7 @@ import {
   View,
   Image,
   Pressable,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Images, DATA as FOOD_DATA } from "../assets/Images";
@@ -14,6 +14,7 @@ import { ProgressBar, Card } from "react-native-paper";
 import Backbutton from "../components/Backbutton";
 import { Ionicons } from "@expo/vector-icons";
 import Heart from "../components/animated_overlays/Heart";
+import useShowOnClick from "../components/animated_overlays/useHeartAnimation";
 
 const AnimalBar = ({ animals, focus }) => {
   return (
@@ -59,41 +60,73 @@ const FeedScreen = () => {
   const [animals, setAnimals] = useState([]);
   const [animalFocus, setAnimalFocus] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [foods, setFoods] = useState(FOOD_DATA);
+  const [foods, setFoods] = useState([]);
+  const [showHeart, setShowHeart] = useState(false);
+  const { show, onClick } = useShowOnClick(2200);
 
   const fetchAnimals = async () => {
-    setLoading(true);
     const res = await fetch("http://localhost:8000/animal/all/");
     const res_json = await res.json();
-    setLoading(false);
     setAnimals(Object.values(res_json));
   };
 
+  const fetchInventory = async () => {
+    const res = await fetch("http://localhost:8000/inventory/");
+    const res_json = await res.json();
+    setLoading(false);
+    let res_arr = [];
+    for (let i of Object.keys(res_json)) {
+      res_arr.push({
+        id: i,
+        name: i,
+        value: res_json[i],
+      });
+    }
+    setFoods(res_arr.sort((a, b) => b.value - a.value));
+  };
+
   useEffect(() => {
+    setLoading(true);
     fetchAnimals();
+    fetchInventory();
+    setLoading(false);
   }, []);
 
-  const renderItem = ({ item }) => {
-    return (
-      <Pressable
-        onPress={() => {
-          const copyFoods = [...foods];
-          if (item.value === 1) {
-            setFoods(copyFoods.filter((copyFood) => copyFood.id !== item.id));
-          } else {
-            const newFoods = copyFoods.map((copyFood) => {
-              if (copyFood.id === item.id) {
-                return {
-                  ...copyFood,
-                  value: copyFood.value - 1
-                };
-              }
-              return copyFood;
-            });
-            setFoods(newFoods);
+  const removeFood = async (item, food_id, animal_id) => {
+    const res = await fetch("http://localhost:8000/inventory/feedanimal/", {
+      method: "PUT",
+      body: JSON.stringify({ food_id, animal_id }),
+    });
+    if (res.status !== 401) {
+      onClick();
+      const copyFoods = [...foods];
+      if (item.value === 1) {
+        setFoods(copyFoods.filter((copyFood) => copyFood.id !== item.id));
+      } else {
+        const newFoods = copyFoods.map((copyFood) => {
+          if (copyFood.id === item.id) {
+            return {
+              ...copyFood,
+              value: copyFood.value - 1,
+            };
           }
-        }}
-      >
+          return copyFood;
+        });
+        setFoods(newFoods);
+      }
+    } else {
+      alert("This animal doesn't like this food!");
+    }
+  };
+
+  const animalInFocus = animals[animalFocus];
+
+  const renderItem = ({ item }) => {
+    // if (item.value === 0) {
+    //   return;
+    // }
+    return (
+      <Pressable onPress={() => removeFood(item, item.name, animalInFocus.id)}>
         <View>
           <Image
             source={Images.foods[item.name.toLowerCase()]}
@@ -109,8 +142,6 @@ const FeedScreen = () => {
     );
   };
 
-  const animalInFocus = animals[animalFocus];
-
   if (!animalInFocus || loading) {
     return (
       <SafeAreaView style={styles.container}>
@@ -121,7 +152,7 @@ const FeedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Heart x={300} y={300} loop={false} />
+      <Heart x={300} y={300} loop={false} show={show} />
       <Backbutton customStyles={{ position: "absolute", top: 48, left: 24 }} />
       <AnimalBar animals={animals} focus={animalFocus} />
 
@@ -132,7 +163,7 @@ const FeedScreen = () => {
           alignItems: "center",
           justifyContent: "space-between",
           width: "100%",
-          paddingHorizontal: 16
+          paddingHorizontal: 16,
         }}
       >
         {/* Back arrow */}
@@ -154,7 +185,7 @@ const FeedScreen = () => {
               height: undefined,
               width: 256,
               aspectRatio: 1,
-              resizeMode: "cover"
+              resizeMode: "cover",
             }}
           />
           <Card style={styles.stats}>
@@ -192,13 +223,17 @@ const FeedScreen = () => {
 
       {/* Bottom Food Bar*/}
       <View style={styles.bottomFoodBar}>
-        <FlatList
-          data={foods}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.name}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        />
+        {foods.reduce((prev, curr) => prev + curr.value, 0) === 0 ? (
+          <Text>Empty inventory. Add some food!</Text>
+        ) : (
+          <FlatList
+            data={foods}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.name}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -211,18 +246,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    position: "relative"
+    position: "relative",
   },
   foodImg: {
     width: 48,
     height: 48,
     marginRight: 36,
     position: "relative",
-    marginHorizontal: 24
+    marginHorizontal: 24,
   },
   bottomFoodBar: {
     position: "absolute",
-    bottom: 64
+    bottom: 64,
   },
   foodImgBadge: {
     position: "absolute",
@@ -233,19 +268,19 @@ const styles = StyleSheet.create({
     top: 4,
     right: 24,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   animal: {
     alignItems: "center",
-    width: "75%"
+    width: "75%",
   },
   animalStats: {
-    width: "100%"
+    width: "100%",
   },
   stats: {
     width: "100%",
     borderRadius: 16,
-    paddingHorizontal: 24
+    paddingHorizontal: 24,
   },
   animalBar: {
     height: 24,
@@ -255,14 +290,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "white",
     paddingVertical: 16,
-    borderRadius: 8
+    borderRadius: 8,
   },
   animalBarImg: {
     height: 36,
-    width: 36
+    width: 36,
   },
   animalBarFocus: {
     backgroundColor: "lightgray",
-    borderRadius: 8
-  }
+    borderRadius: 8,
+  },
 });

@@ -5,15 +5,19 @@ import {
   SafeAreaView,
   FlatList,
   Image,
-  TextInput,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { useTheme } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import { Images, DATA } from "../assets/Images";
 import Backbutton from "../components/Backbutton";
 import { TouchableHighlight } from "react-native-gesture-handler";
 
+/**
+ * FlatList Item component
+ * Renders icon of food on left, name of food as title with food subtext underneath on right
+ * onPress selects food to be added to inventory, darkening the background color of the item
+ */
 const Item = ({ id, name, description, onPress, selected }) => {
   return (
     <TouchableHighlight
@@ -36,13 +40,35 @@ const Item = ({ id, name, description, onPress, selected }) => {
 };
 
 const FoodScreen = () => {
-  const { colors } = useTheme();
   const navigation = useNavigation();
 
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState(DATA);
   const [selectedData, setSelectedData] = useState(new Set());
   const [selectedArray, setSelectedArray] = useState(new Array(6).fill(false));
+
+  const getFruits = async () => {
+    // setLoading(true);
+    const res = await fetch("http://localhost:8000/food/");
+    const res_json = await res.json();
+    console.log(res_json);
+    const data = [];
+    let i = 0;
+    for (const [key, value] of Object.entries(res_json)) {
+      data.push({
+        id: i,
+        name: key,
+        description: value.description,
+        nutrients: value.nutrients,
+      });
+      i++;
+    }
+    console.log(data);
+    // setFilteredDataSource(data);
+    // setLoading(false);
+  };
+
+  getFruits();
 
   const renderItem = ({ item }) => (
     <Item
@@ -69,10 +95,8 @@ const FoodScreen = () => {
   };
 
   const onSubmit = async () => {
-    const data = Array.from(selectedData);
     const map = {};
-
-    data.map((name) => (map[name] = 1));
+    Array.from(selectedData).map((name) => (map[name] = 1));
     const body = { food_counts: map };
 
     await fetch("http://localhost:8000/inventory/add/multiple/", {
@@ -119,10 +143,10 @@ const FoodScreen = () => {
 
       <TextInput
         style={styles.searchbar}
-        onChangeText={(text) => searchFilterFunction(text)}
+        label="Search"
         value={search}
-        underlineColorAndroid="transparent"
-        placeholder="Search"
+        onChangeText={(text) => searchFilterFunction(text)}
+        theme={{ roundness: 10 }}
       />
       <FlatList
         data={filteredDataSource}
@@ -192,12 +216,9 @@ const styles = StyleSheet.create({
   searchbar: {
     height: 50,
     width: "75%",
-    marginRight: 16,
     backgroundColor: "white",
-    borderRadius: 10,
     borderWidth: 1,
     borderColor: "#8bbd8b",
-    paddingLeft: 20,
-    margin: 5,
+    borderRadius: 10,
   },
 });
