@@ -117,7 +117,7 @@ ANIMAL_NAME_TO_OBJ: dict[str, Animal] = {
     Nickname.RACCOON.name: Animal(
         Nickname.RACCOON.name,
         valid_nutrients={Nutrient.FIBER},
-        description="Fiber E is important for our body, and luckily for Fiber Racoon it's also great for his hair! He maintains his healthy coat by eating almonds and avocados.",
+        description="Fiber is important for our body, and luckily for Fiber Racoon it helps control blood sugar levels and lowers cholestrol. He likes eating foods like avocados and bananas.",
     ),
     Nickname.PANDA.name: Animal(
         Nickname.PANDA.name,
