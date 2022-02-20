@@ -61,21 +61,17 @@ const Item = ({
           <Text style={styles.title}>{name.replace("_", " ")}</Text>
           <Text style={styles.subtext}>{description}</Text>
           <View style={styles.nutrientsWrapper}>
-            {nutrients.map((nutrient, id) => {
-              if (id !== nutrients.length - 1) {
-                return (
-                  <Text style={styles.nutrients} key={id}>
-                    {nutrient + ", "}
-                  </Text>
-                );
-              } else {
-                return (
-                  <Text style={styles.nutrients} key={id}>
-                    {nutrient}
-                  </Text>
-                );
-              }
-            })}
+            <Text style={styles.nutrients}>
+              {nutrients.map((nutrient, id) => {
+                let output = "";
+                if (id !== nutrients.length - 1) {
+                  output += nutrient + ", ";
+                } else {
+                  output += nutrient;
+                }
+                return output;
+              })}
+            </Text>
           </View>
         </View>
       </View>
@@ -235,17 +231,6 @@ const styles = StyleSheet.create({
     margin: 20,
     marginTop: 100,
   },
-  animalWrapper: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: 150,
-    width: 200,
-    paddingTop: 10,
-    marginTop: 25,
-    marginBottom: 10,
-    backgroundColor: "#8bbd8b",
-    borderRadius: 10,
-  },
   item: {
     justifyContent: "center",
     backgroundColor: "#cfe2cf",
@@ -278,6 +263,7 @@ const styles = StyleSheet.create({
   },
   nutrientsWrapper: {
     flexDirection: "row",
+    width: 200,
   },
   nutrients: {
     fontSize: 10,
