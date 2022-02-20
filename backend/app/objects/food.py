@@ -157,7 +157,10 @@ FOOD_NAME_TO_OBJ: dict[str, Food] = {
         nutrients={Nutrient.POTASSIUM, Nutrient.VITAMIN_C},
         description="tomato cooked with eggs is a popular Chinese dish and jam packed with vitamins!",
     ),
-    "salmon": Food("salmon", nutrients={Nutrient.VITAMIN_D, Nutrient.OMEGA_3}),
+    "salmon": Food(
+        "salmon", nutrients={Nutrient.VITAMIN_D, Nutrient.OMEGA_3}, 
+        description="raw salmon can contain more omega-3 than cooked salmon"
+    ),
     "brown_rice": Food(
         "brown rice",
         nutrients={Nutrient.VITAMIN_B, Nutrient.MAGNESIUM, Nutrient.GRAINS},
