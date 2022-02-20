@@ -13,9 +13,6 @@ import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import { Images, DATA } from "../assets/Images";
 import Backbutton from "../components/Backbutton";
-import GestureRecognizer, {
-  swipeDirections,
-} from "react-native-swipe-gestures";
 
 /**
  * FlatList Item component

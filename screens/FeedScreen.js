@@ -18,35 +18,48 @@ import useShowOnClick from "../components/animated_overlays/useHeartAnimation";
 import { useNavigation } from "@react-navigation/native";
 
 const AnimalBar = ({ animals, focus, setFocus }) => {
-  return (
-    <View style={styles.animalBar}>
-      {animals.map((animal, idx) => {
-        if (idx === focus) {
-          return (
-            <Image
-              key={idx}
-              source={
-                Images.animals[
-                  `${animal.id.toLowerCase()}${Math.min(3, animal.level)}`
-                ]
-              }
-              style={[styles.animalBarImg, styles.animalBarFocus]}
-            />
-          );
-        }
-        return (
+  const renderItem = ({ item }) => {
+    if (animals[focus].id === item.id) {
+      return (
+        <Pressable onPress={() => setFocus(animals.indexOf(item))}>
           <Image
-            key={idx}
             source={
               Images.animals[
-                `${animal.id.toLowerCase()}${Math.min(3, animal.level)}`
+                `${item.id.toLowerCase()}${Math.min(3, item.level)}`
               ]
             }
-            style={styles.animalBarImg}
+            style={{
+              width: 72,
+              height: 72,
+              backgroundColor: "lightgray",
+              borderRadius: 8,
+            }}
           />
-        );
-      })}
-    </View>
+        </Pressable>
+      );
+    }
+
+    return (
+      <Pressable onPress={() => setFocus(animals.indexOf(item))}>
+        <Image
+          source={
+            Images.animals[`${item.id.toLowerCase()}${Math.min(3, item.level)}`]
+          }
+          style={{ width: 72, height: 72 }}
+        />
+      </Pressable>
+    );
+  };
+
+  return (
+    <FlatList
+      data={animals}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+      style={{ position: "absolute", top: 144, zIndex: 15 }}
+    />
   );
 };
 
@@ -236,7 +249,9 @@ const FeedScreen = () => {
         </View>
         {/* Forward arrow */}
         <Pressable
-          onPress={() => setAnimalFocus(animalFocus + 1)}
+          onPress={() => {
+            setAnimalFocus(animalFocus + 1);
+          }}
           disabled={animalFocus >= animals.length - 1}
           style={{ position: "absolute", top: 350, right: 10 }}
         >
@@ -311,18 +326,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   animalBar: {
-    height: 24,
-    position: "absolute",
-    top: 108,
-    alignItems: "center",
-    flexDirection: "row",
-    backgroundColor: "white",
-    paddingVertical: 16,
-    borderRadius: 8,
+    // top: 144
+    // backgroundColor: "white"
   },
   animalBarImg: {
-    height: 36,
-    width: 36,
+    height: 48,
+    width: 48,
   },
   animalBarFocus: {
     backgroundColor: "lightgray",
