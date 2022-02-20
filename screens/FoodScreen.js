@@ -147,13 +147,7 @@ const FoodScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.animalWrapper}>
-        <Text>animal name here</Text>
-        <Image
-          source={Images.animals.redpanda}
-          style={{ width: 128, height: 128 }}
-        />
-      </View>
+      <Text style={styles.screenTitle}>SCREEN TITLE HERE</Text>
 
       <TextInput
         style={styles.searchbar}
@@ -187,6 +181,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
+  },
+  screenTitle: {
+    fontSize: 30,
+    margin: 20,
+    marginTop: 100,
   },
   animalWrapper: {
     justifyContent: "center",
@@ -240,6 +239,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#8bbd8b",
     borderRadius: 10,
+    marginBottom: 10,
   },
   submit: {
     justifyContent: "center",
