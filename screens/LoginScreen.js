@@ -20,10 +20,6 @@ const LoginScreen = () => {
         resizeMode="cover"
         style={styles.backgroundImg}
       >
-        <Image
-          source={Images.animals.wolf1}
-          style={{ width: 128, height: 128 }}
-        />
         <View style={styles.inputRow}>
           <TextInput
             style={styles.loginInput}
@@ -54,6 +50,8 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
+    position: "absolute",
+    bottom: "10%",
   },
   container: {
     flex: 1,
@@ -69,5 +67,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
   },
 });
