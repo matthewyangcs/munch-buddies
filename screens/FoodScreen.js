@@ -48,7 +48,8 @@ const Item = ({ id, name, description, nutrients, onPress, selected }) => {
   );
 };
 
-const FoodScreen = () => {
+const FoodScreen = ({ route }) => {
+  const { username } = route.params;
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);
@@ -120,6 +121,8 @@ const FoodScreen = () => {
       },
       body: JSON.stringify(body),
     });
+    setSelectedArray(new Array(6).fill(false));
+    setSelectedData(new Set());
 
     navigation.navigate("FeedScreen");
   };
@@ -147,13 +150,7 @@ const FoodScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.animalWrapper}>
-        <Text>animal name here</Text>
-        <Image
-          source={Images.animals.redpanda}
-          style={{ width: 128, height: 128 }}
-        />
-      </View>
+      <Text style={styles.screenTitle}>Hi {username}, let's munch!</Text>
 
       <TextInput
         style={styles.searchbar}
@@ -187,6 +184,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
+  },
+  screenTitle: {
+    justifyContent: "center",
+    fontSize: 30,
+    margin: 20,
+    marginTop: 100,
   },
   animalWrapper: {
     justifyContent: "center",
@@ -240,6 +243,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#8bbd8b",
     borderRadius: 10,
+    marginBottom: 10,
   },
   submit: {
     justifyContent: "center",

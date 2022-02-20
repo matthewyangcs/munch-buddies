@@ -9,6 +9,10 @@ const LoginScreen = () => {
   const [text, setText] = useState("");
   const navigation = useNavigation();
 
+  const onPress = () => {
+    navigation.navigate("FoodScreen", { username: text });
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -30,7 +34,7 @@ const LoginScreen = () => {
             right={
               <TextInput.Icon
                 name="arrow-right"
-                onPress={() => navigation.navigate("FoodScreen")}
+                onPress={onPress}
                 color={colors.primary}
               />
             }
