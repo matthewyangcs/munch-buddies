@@ -13,6 +13,9 @@ import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import { Images, DATA } from "../assets/Images";
 import Backbutton from "../components/Backbutton";
+import GestureRecognizer, {
+  swipeDirections,
+} from "react-native-swipe-gestures";
 
 /**
  * FlatList Item component
@@ -59,11 +62,19 @@ const Item = ({
           <Text style={styles.subtext}>{description}</Text>
           <View style={styles.nutrientsWrapper}>
             {nutrients.map((nutrient, id) => {
-              return (
-                <Text style={styles.nutrients} key={id}>
-                  {nutrient + " "}
-                </Text>
-              );
+              if (id !== nutrients.length - 1) {
+                return (
+                  <Text style={styles.nutrients} key={id}>
+                    {nutrient + ", "}
+                  </Text>
+                );
+              } else {
+                return (
+                  <Text style={styles.nutrients} key={id}>
+                    {nutrient}
+                  </Text>
+                );
+              }
             })}
           </View>
         </View>
@@ -136,7 +147,6 @@ const FoodScreen = ({ route }) => {
 
   const onDecr = (e, name, id) => {
     e.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
     if (selectedData[name] === 1) {
       selectedArray[id] = false;
     }
