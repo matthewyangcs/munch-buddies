@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
     shadowColor: "#00000099",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 1,
-    elevation: 1
-  }
+    elevation: 1,
+  },
 });

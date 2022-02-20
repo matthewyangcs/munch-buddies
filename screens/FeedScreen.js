@@ -6,7 +6,7 @@ import {
   View,
   Image,
   Pressable,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Images } from "../assets/Images";
@@ -32,7 +32,7 @@ const AnimalBar = ({ animals, focus, setFocus }) => {
               width: 72,
               height: 72,
               backgroundColor: "lightgray",
-              borderRadius: 8
+              borderRadius: 8,
             }}
           />
         </Pressable>
@@ -80,7 +80,7 @@ const FeedScreen = () => {
   const [animalFocus, setAnimalFocus] = useState(0);
   const [loading, setLoading] = useState(false);
   const [foods, setFoods] = useState([]);
-  const { show, onClick } = useShowOnClick(2200);
+  const { show, onClick } = useShowOnClick(1500);
   const navigation = useNavigation();
 
   const fetchAnimals = async () => {
@@ -98,7 +98,7 @@ const FeedScreen = () => {
       res_arr.push({
         id: i,
         name: i,
-        value: res_json[i]
+        value: res_json[i],
       });
     }
     setFoods(res_arr.sort((a, b) => b.value - a.value));
@@ -114,7 +114,7 @@ const FeedScreen = () => {
   const removeFood = async (item, food_id, animal_id) => {
     const res = await fetch("http://localhost:8000/inventory/feedanimal/", {
       method: "PUT",
-      body: JSON.stringify({ food_id, animal_id })
+      body: JSON.stringify({ food_id, animal_id }),
     });
     if (res.status !== 401) {
       onClick();
@@ -126,7 +126,7 @@ const FeedScreen = () => {
           if (copyFood.id === item.id) {
             return {
               ...copyFood,
-              value: copyFood.value - 1
+              value: copyFood.value - 1,
             };
           }
           return copyFood;
@@ -195,7 +195,7 @@ const FeedScreen = () => {
           alignItems: "center",
           justifyContent: "center",
           width: "100%",
-          paddingHorizontal: 16
+          paddingHorizontal: 16,
         }}
       >
         {/* Back arrow */}
@@ -225,7 +225,7 @@ const FeedScreen = () => {
               height: undefined,
               width: 256,
               aspectRatio: 1,
-              resizeMode: "contain"
+              resizeMode: "contain",
             }}
           />
           <Card style={styles.stats}>
@@ -289,18 +289,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     position: "relative",
-    height: "100%"
+    height: "100%",
   },
   foodImg: {
     width: 48,
     height: 48,
     marginRight: 36,
     position: "relative",
-    marginHorizontal: 24
+    marginHorizontal: 24,
   },
   bottomFoodBar: {
     position: "absolute",
-    bottom: 64
+    bottom: 64,
   },
   foodImgBadge: {
     position: "absolute",
@@ -311,20 +311,20 @@ const styles = StyleSheet.create({
     top: 4,
     right: 24,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   animal: {
     alignItems: "center",
     marginTop: 250,
-    width: "75%"
+    width: "75%",
   },
   animalStats: {
-    width: "100%"
+    width: "100%",
   },
   stats: {
     width: "100%",
     borderRadius: 16,
-    paddingHorizontal: 24
+    paddingHorizontal: 24,
   },
   animalBar: {
     // top: 144
@@ -332,11 +332,11 @@ const styles = StyleSheet.create({
   },
   animalBarImg: {
     height: 48,
-    width: 48
+    width: 48,
   },
   animalBarFocus: {
     backgroundColor: "lightgray",
-    borderRadius: 8
+    borderRadius: 8,
   },
   viewStats: {
     position: "absolute",
@@ -350,11 +350,11 @@ const styles = StyleSheet.create({
     shadowColor: "#00000099",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 1,
     elevation: 1,
-    zIndex: 8888
-  }
+    zIndex: 8888,
+  },
 });

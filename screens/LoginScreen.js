@@ -50,16 +50,18 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     position: "absolute",
     bottom: "10%",
+    width: "100%",
   },
   container: {
     flex: 1,
+    justifyContent: "center",
   },
   loginInput: {
     height: 50,
     width: "75%",
-    marginRight: 16,
     backgroundColor: "white",
     borderRadius: 10,
   },

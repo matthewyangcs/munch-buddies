@@ -17,8 +17,8 @@ const theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: "#8bbd8b",
-    accent: "#6cae75"
-  }
+    accent: "#6cae75",
+  },
 };
 
 export default function App() {
@@ -27,7 +27,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
-            headerShown: false
+            headerShown: false,
           }}
         >
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -45,6 +45,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });

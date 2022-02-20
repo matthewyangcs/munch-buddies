@@ -20,11 +20,11 @@ const Heart = ({ x, y, loop, show }) => {
   }, [show]);
 
   useEffect(() => {
-    fadeInOut(opacityAnm, 1000, 1200, loop).start();
+    fadeInOut(opacityAnm, 1000, 500, loop).start();
 
     Animated.timing(posAnm, {
       toValue: 1,
-      duration: 1800,
+      duration: 2200,
       easing: Easing.bezier(0.1, 0.1, 0.3, 0.3),
       useNativeDriver: true,
     }).start();
