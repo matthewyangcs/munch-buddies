@@ -5,20 +5,30 @@ import {
   SafeAreaView,
   FlatList,
   Image,
+  TouchableOpacity,
+  TouchableHighlight,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import { Images, DATA } from "../assets/Images";
 import Backbutton from "../components/Backbutton";
-import { TouchableHighlight } from "react-native-gesture-handler";
 
 /**
  * FlatList Item component
  * Renders icon of food on left, name of food as title with food subtext underneath on right
  * onPress selects food to be added to inventory, darkening the background color of the item
  */
-const Item = ({ id, name, description, nutrients, onPress, selected }) => {
+const Item = ({
+  id,
+  name,
+  description,
+  nutrients,
+  onPress,
+  selected,
+  count,
+  onDecr,
+}) => {
   return (
     <TouchableHighlight
       style={[styles.item, selected && { backgroundColor: "#6cae75" }]}
@@ -26,12 +36,26 @@ const Item = ({ id, name, description, nutrients, onPress, selected }) => {
       onPress={() => onPress(name, id)}
     >
       <View style={styles.itemWrapper}>
+        {selected && (
+          <View style={styles.counter}>
+            <Text style={styles.counterText}>{count}</Text>
+          </View>
+        )}
+        {selected && (
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.minus}
+            onPress={(e) => onDecr(e, name, id)}
+          >
+            <Text style={styles.counterText}>-</Text>
+          </TouchableOpacity>
+        )}
         <View style={styles.iconWrapper}>
           <Image style={styles.icon} source={Images.foods[name]} />
         </View>
 
         <View>
-          <Text style={styles.title}>{name}</Text>
+          <Text style={styles.title}>{name.replace("_", " ")}</Text>
           <Text style={styles.subtext}>{description}</Text>
           <View style={styles.nutrientsWrapper}>
             {nutrients.map((nutrient, id) => {
@@ -56,7 +80,7 @@ const FoodScreen = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
-  const [selectedData, setSelectedData] = useState(new Set());
+  const [selectedData, setSelectedData] = useState(new Map());
   const [selectedArray, setSelectedArray] = useState(new Array(6).fill(false));
 
   useEffect(() => {
@@ -94,27 +118,35 @@ const FoodScreen = ({ route }) => {
       nutrients={item.nutrients}
       onPress={onPress}
       selected={selectedArray[item.id]}
+      count={selectedData[item.name]}
+      onDecr={onDecr}
     />
   );
 
   const onPress = (name, id) => {
     if (selectedArray[id]) {
-      selectedData.delete(name);
-      setSelectedData(new Set(selectedData));
-      selectedArray[id] = false;
-      setSelectedArray([...selectedArray]);
+      setSelectedData({ ...selectedData, [name]: selectedData[name] + 1 });
     } else {
-      selectedData.add(name);
-      setSelectedData(new Set(selectedData));
-      selectedArray[id] = true;
-      setSelectedArray([...selectedArray]);
+      selectedData[name] = 1;
+      setSelectedData({ ...selectedData });
     }
+    selectedArray[id] = true;
+    setSelectedArray([...selectedArray]);
+  };
+
+  const onDecr = (e, name, id) => {
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    if (selectedData[name] === 1) {
+      selectedArray[id] = false;
+    }
+
+    setSelectedData({ ...selectedData, [name]: selectedData[name] - 1 });
+    setSelectedArray([...selectedArray]);
   };
 
   const onSubmit = async () => {
-    const map = {};
-    Array.from(selectedData).map((name) => (map[name] = 1));
-    const body = { food_counts: map };
+    const body = { food_counts: selectedData };
 
     await fetch("http://localhost:8000/inventory/add/multiple/", {
       method: "PUT",
@@ -213,7 +245,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   itemWrapper: {
+    width: "80%",
     flexDirection: "row",
+    position: "relative",
   },
   iconWrapper: {
     width: 50,
@@ -254,5 +288,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginVertical: 8,
     borderRadius: 10,
+  },
+  counter: {
+    width: 25,
+    height: 25,
+    backgroundColor: "#36633c",
+    borderRadius: 13,
+    justifyContent: "center",
+    position: "absolute",
+    left: -15,
+    top: -15,
+  },
+  minus: {
+    width: 25,
+    height: 25,
+    backgroundColor: "#b30000",
+    borderRadius: 13,
+    justifyContent: "center",
+    position: "absolute",
+    right: -70,
+    top: -15,
+    zIndex: 999,
+  },
+  counterText: {
+    fontSize: 18,
+    color: "white",
+    textAlign: "center",
   },
 });
