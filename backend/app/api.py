@@ -1,7 +1,6 @@
 """APIs for Frontend to Call
 
 Note: By default, Fast API will return a JSON response obj, with the content as our msg"""
-import json
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -11,11 +10,6 @@ from objects.food import Food, FOOD_NAME_TO_OBJ
 from objects.animal import Animal, ANIMAL_NAME_TO_OBJ
 
 from objects.user import User
-
-# import .objects.food
-# from objects import food
-
-# from .objects.user import User
 
 app = FastAPI()
 
@@ -39,7 +33,7 @@ app.add_middleware(
 ### ACTUAL OBJECT DATA
 animal_dict = ANIMAL_NAME_TO_OBJ
 food_dict = FOOD_NAME_TO_OBJ
-user = User(inventory=[])
+user = User(inventory=[], history=[])
 
 
 ######################################
@@ -76,8 +70,6 @@ async def get_food_dict() -> dict:
 
 ######################################
 ### User Action APIs
-
-
 @app.get("/inventory/")
 async def get_inventory():
     return user.get_inventory()
@@ -145,10 +137,27 @@ async def feed_animal(body: FeedFood):
     food, animal = food_dict[food_id], animal_dict[animal_id]
     # check that user has enough and animal is compatible
     if user.get_food_count(food_id) <= 0:
-        raise HTTPException(status_code=404, detail="You don't have that food!")
+        raise HTTPException(status_code=401, detail="You don't have that food!")
     elif not animal.can_eat(food):
-        raise HTTPException(status_code=404, detail="Food is incompatible!")
-
-    animal.eat_food(food=food)
-    user.remove_food(food_id=food_id)
+        raise HTTPException(status_code=401, detail="Food is incompatible!")
+    else:
+        animal.eat_food(food=food)
+        user.remove_food(food_id=food_id)
     return {"food_id": food_id, "animal": animal.to_dict()}
+
+
+######################################
+### Stats Page
+
+
+@app.get("/stats/food/history/")
+async def nutrient_history():
+    """Dummy function for now"""
+
+    return {
+        "all": [5, 11, 15, 22, 31, 43],
+        "vitamins": [1, 3, 5, 7, 10, 15],
+        "antioxidants": [2, 2, 3, 3, 4, 5],
+        "minerals": [1, 2, 3, 4, 5, 6],
+        "protein": [1, 4, 5, 8, 13, 17],
+    }
