@@ -27,7 +27,7 @@ const AnimalBar = ({ animals, focus, setFocus }) => {
               key={idx}
               source={
                 Images.animals[
-                  `${animal.id.toLowerCase()}${Math.min(2, animal.level)}`
+                  `${animal.id.toLowerCase()}${Math.min(3, animal.level)}`
                 ]
               }
               style={[styles.animalBarImg, styles.animalBarFocus]}
@@ -39,7 +39,7 @@ const AnimalBar = ({ animals, focus, setFocus }) => {
             key={idx}
             source={
               Images.animals[
-                `${animal.id.toLowerCase()}${Math.min(2, animal.level)}`
+                `${animal.id.toLowerCase()}${Math.min(3, animal.level)}`
               ]
             }
             style={styles.animalBarImg}
@@ -203,7 +203,7 @@ const FeedScreen = () => {
             source={
               Images.animals[
                 `${animalInFocus.id.toLowerCase()}${Math.min(
-                  2,
+                  3,
                   animalInFocus.level
                 )}`
               ]
