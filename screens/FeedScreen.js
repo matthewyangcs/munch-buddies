@@ -9,25 +9,27 @@ import {
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Images, DATA as FOOD_DATA } from "../assets/Images";
+import { Images } from "../assets/Images";
 import { ProgressBar, Card } from "react-native-paper";
 import Backbutton from "../components/Backbutton";
 import { Ionicons } from "@expo/vector-icons";
 import Heart from "../components/animated_overlays/Heart";
 import useShowOnClick from "../components/animated_overlays/useHeartAnimation";
+import { useNavigation } from "@react-navigation/native";
 
-const AnimalBar = ({ animals, focus }) => {
+const AnimalBar = ({ animals, focus, setFocus }) => {
   return (
     <View style={styles.animalBar}>
       {animals.map((animal, idx) => {
-        if (idx > 3) {
-          return;
-        }
         if (idx === focus) {
           return (
             <Image
               key={idx}
-              source={Images.animals[animal.id.toLowerCase()]}
+              source={
+                Images.animals[
+                  `${animal.id.toLowerCase()}${Math.min(2, animal.level)}`
+                ]
+              }
               style={[styles.animalBarImg, styles.animalBarFocus]}
             />
           );
@@ -35,7 +37,11 @@ const AnimalBar = ({ animals, focus }) => {
         return (
           <Image
             key={idx}
-            source={Images.animals[animal.id.toLowerCase()]}
+            source={
+              Images.animals[
+                `${animal.id.toLowerCase()}${Math.min(2, animal.level)}`
+              ]
+            }
             style={styles.animalBarImg}
           />
         );
@@ -61,8 +67,8 @@ const FeedScreen = () => {
   const [animalFocus, setAnimalFocus] = useState(0);
   const [loading, setLoading] = useState(false);
   const [foods, setFoods] = useState([]);
-  const [showHeart, setShowHeart] = useState(false);
   const { show, onClick } = useShowOnClick(2200);
+  const navigation = useNavigation();
 
   const fetchAnimals = async () => {
     const res = await fetch("http://localhost:8000/animal/all/");
@@ -114,6 +120,7 @@ const FeedScreen = () => {
         });
         setFoods(newFoods);
       }
+      fetchAnimals();
     } else {
       alert("This animal doesn't like this food!");
     }
@@ -122,9 +129,9 @@ const FeedScreen = () => {
   const animalInFocus = animals[animalFocus];
 
   const renderItem = ({ item }) => {
-    // if (item.value === 0) {
-    //   return;
-    // }
+    if (item.value === 0) {
+      return;
+    }
     return (
       <Pressable onPress={() => removeFood(item, item.name, animalInFocus.id)}>
         <View>
@@ -152,16 +159,28 @@ const FeedScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Heart x={300} y={300} loop={false} show={show} />
-      <Backbutton customStyles={{ position: "absolute", top: 48, left: 24 }} />
-      <AnimalBar animals={animals} focus={animalFocus} />
+      <Heart x={250} y={300} show={show} />
+      <Backbutton
+        customStyles={{ position: "absolute", top: 48, left: 24, zIndex: 12 }}
+      />
+      <Pressable
+        style={styles.viewStats}
+        onPress={() => navigation.navigate("StatsScreen")}
+      >
+        <Text style={{ fontWeight: "700" }}>View stats</Text>
+      </Pressable>
+      <AnimalBar
+        animals={animals}
+        focus={animalFocus}
+        setFocus={setAnimalFocus}
+      />
 
       {/* Navigation wrapper around animals */}
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
           width: "100%",
           paddingHorizontal: 16,
         }}
@@ -170,6 +189,7 @@ const FeedScreen = () => {
         <Pressable
           onPress={() => setAnimalFocus(animalFocus - 1)}
           disabled={animalFocus === 0}
+          style={{ position: "absolute", top: 350, left: 10 }}
         >
           <Ionicons
             name="arrow-back-outline"
@@ -180,12 +200,18 @@ const FeedScreen = () => {
         {/* Animal and Stats */}
         <View style={styles.animal}>
           <Image
-            source={Images.animals[animalInFocus.id.toLowerCase()]}
+            source={
+              Images.animals[
+                `${animalInFocus.id.toLowerCase()}${Math.min(
+                  2,
+                  animalInFocus.level
+                )}`
+              ]
+            }
             style={{
-              height: undefined,
+              height: 250,
               width: 256,
               aspectRatio: 1,
-              resizeMode: "cover",
             }}
           />
           <Card style={styles.stats}>
@@ -212,6 +238,7 @@ const FeedScreen = () => {
         <Pressable
           onPress={() => setAnimalFocus(animalFocus + 1)}
           disabled={animalFocus >= animals.length - 1}
+          style={{ position: "absolute", top: 350, right: 10 }}
         >
           <Ionicons
             name="arrow-forward-outline"
@@ -244,9 +271,9 @@ export default FeedScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     position: "relative",
+    height: "100%",
   },
   foodImg: {
     width: 48,
@@ -272,6 +299,7 @@ const styles = StyleSheet.create({
   },
   animal: {
     alignItems: "center",
+    marginTop: 250,
     width: "75%",
   },
   animalStats: {
@@ -285,7 +313,7 @@ const styles = StyleSheet.create({
   animalBar: {
     height: 24,
     position: "absolute",
-    top: 96,
+    top: 108,
     alignItems: "center",
     flexDirection: "row",
     backgroundColor: "white",
@@ -299,5 +327,24 @@ const styles = StyleSheet.create({
   animalBarFocus: {
     backgroundColor: "lightgray",
     borderRadius: 8,
+  },
+  viewStats: {
+    position: "absolute",
+    top: 48,
+    right: 24,
+    backgroundColor: "white",
+    height: 35,
+    justifyContent: "center",
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    shadowColor: "#00000099",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 1,
+    elevation: 1,
+    zIndex: 8888,
   },
 });

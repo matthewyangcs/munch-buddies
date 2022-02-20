@@ -21,7 +21,7 @@ const LoginScreen = () => {
         style={styles.backgroundImg}
       >
         <Image
-          source={Images.animals.wolf}
+          source={Images.animals.wolf1}
           style={{ width: 128, height: 128 }}
         />
         <View style={styles.inputRow}>
