@@ -6,7 +6,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  TouchableHighlight,
+  TouchableHighlight
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -27,7 +27,7 @@ const Item = ({
   onPress,
   selected,
   count,
-  onDecr,
+  onDecr
 }) => {
   return (
     <TouchableHighlight
@@ -105,7 +105,7 @@ const FoodScreen = ({ route }) => {
         id: i,
         name: key,
         description: value.description,
-        nutrients: value.nutrients,
+        nutrients: value.nutrients
       });
       i++;
     }
@@ -154,9 +154,9 @@ const FoodScreen = ({ route }) => {
     await fetch("http://localhost:8000/inventory/add/multiple/", {
       method: "PUT",
       headers: {
-        "Content-type": "application/json",
+        "Content-type": "application/json"
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(body)
     });
     setSelectedArray(new Array(6).fill(false));
     setSelectedData(new Set());
@@ -220,13 +220,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    position: "relative",
+    position: "relative"
   },
   screenTitle: {
     justifyContent: "center",
     fontSize: 30,
     margin: 20,
-    marginTop: 100,
+    marginTop: 100
   },
   item: {
     justifyContent: "center",
@@ -234,36 +234,36 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
-    borderRadius: 10,
+    borderRadius: 10
   },
   itemWrapper: {
     width: "80%",
     flexDirection: "row",
-    position: "relative",
+    position: "relative"
   },
   iconWrapper: {
     width: 50,
     height: 50,
     marginRight: 30,
-    justifyContent: "center",
+    justifyContent: "center"
   },
   icon: {
     width: 50,
     height: 50,
-    resizeMode: "center",
+    resizeMode: "center"
   },
   title: {
-    fontSize: 22,
+    fontSize: 22
   },
   subtext: {
-    width: 200,
+    width: 200
   },
   nutrientsWrapper: {
     flexDirection: "row",
-    width: 200,
+    width: 200
   },
   nutrients: {
-    fontSize: 10,
+    fontSize: 10
   },
   searchbar: {
     height: 50,
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#8bbd8b",
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 10
   },
   submit: {
     justifyContent: "center",
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
     marginVertical: 8,
-    borderRadius: 10,
+    borderRadius: 10
   },
   counter: {
     width: 25,
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     left: -15,
-    top: -15,
+    top: -15
   },
   minus: {
     width: 25,
@@ -301,11 +301,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -70,
     top: -15,
-    zIndex: 999,
+    zIndex: 999
   },
   counterText: {
     fontSize: 18,
     color: "white",
-    textAlign: "center",
-  },
+    textAlign: "center"
+  }
 });
