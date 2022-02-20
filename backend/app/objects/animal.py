@@ -6,11 +6,11 @@ from enum import Enum
 class Nickname(Enum):
     BEAR = "Vitamin-B Bear"
     CAT = "Vitamin Cat"
-    DEER = "Iron Deer"
+    DEER = "Antioxidant Deer"
     DOG = "Vitamin Dog"
     FOX = "Healthy Fox"
     RACCOON = "Fiber Racoon"
-    PANDA = "Protein Panda"
+    PANDA = "Potassium Panda"
     SHEEP = "Magnesium Sheep"
     SKUNK = "Omega-3 Skunk"
     TIGER = "Iron Tiger"
