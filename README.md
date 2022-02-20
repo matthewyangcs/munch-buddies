@@ -1,5 +1,5 @@
 # munch-buddies
-
+Check out the dev post! https://devpost.com/software/munch-buddies
 ## Running Backend
 
 Navigate to backend folder
