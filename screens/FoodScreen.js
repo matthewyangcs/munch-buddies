@@ -52,6 +52,7 @@ const FoodScreen = ({ route }) => {
   const { username } = route.params;
   const navigation = useNavigation();
 
+  const [masterData, setMasterData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -80,6 +81,7 @@ const FoodScreen = ({ route }) => {
       });
       i++;
     }
+    setMasterData(data);
 
     setFilteredDataSource(data);
   };
@@ -132,7 +134,7 @@ const FoodScreen = ({ route }) => {
     if (text) {
       // Inserted text is not blank
       // Filter the masterDataSource and update FilteredDataSource
-      const newData = DATA.filter(function (item) {
+      const newData = filteredDataSource.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
         const textData = text.toUpperCase();
@@ -143,7 +145,7 @@ const FoodScreen = ({ route }) => {
     } else {
       // Inserted text is blank
       // Update FilteredDataSource with masterDataSource
-      setFilteredDataSource(DATA);
+      setFilteredDataSource(masterData);
       setSearch(text);
     }
   };
