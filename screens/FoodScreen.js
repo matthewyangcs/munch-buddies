@@ -6,7 +6,7 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-paper";
 import { Images, DATA } from "../assets/Images";
@@ -18,7 +18,7 @@ import { TouchableHighlight } from "react-native-gesture-handler";
  * Renders icon of food on left, name of food as title with food subtext underneath on right
  * onPress selects food to be added to inventory, darkening the background color of the item
  */
-const Item = ({ id, name, description, onPress, selected }) => {
+const Item = ({ id, name, description, nutrients, onPress, selected }) => {
   return (
     <TouchableHighlight
       style={[styles.item, selected && { backgroundColor: "#6cae75" }]}
@@ -33,6 +33,15 @@ const Item = ({ id, name, description, onPress, selected }) => {
         <View>
           <Text style={styles.title}>{name}</Text>
           <Text style={styles.subtext}>{description}</Text>
+          <View style={styles.nutrientsWrapper}>
+            {nutrients.map((nutrient, id) => {
+              return (
+                <Text style={styles.nutrients} key={id}>
+                  {nutrient + " "}
+                </Text>
+              );
+            })}
+          </View>
         </View>
       </View>
     </TouchableHighlight>
@@ -42,16 +51,23 @@ const Item = ({ id, name, description, onPress, selected }) => {
 const FoodScreen = () => {
   const navigation = useNavigation();
 
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
-  const [filteredDataSource, setFilteredDataSource] = useState(DATA);
+  const [filteredDataSource, setFilteredDataSource] = useState([]);
   const [selectedData, setSelectedData] = useState(new Set());
   const [selectedArray, setSelectedArray] = useState(new Array(6).fill(false));
 
+  useEffect(() => {
+    setLoading(true);
+    getFruits();
+    setLoading(false);
+  }, []);
+
   const getFruits = async () => {
-    // setLoading(true);
     const res = await fetch("http://localhost:8000/food/");
     const res_json = await res.json();
-    console.log(res_json);
+
+    // convert object to array
     const data = [];
     let i = 0;
     for (const [key, value] of Object.entries(res_json)) {
@@ -63,18 +79,16 @@ const FoodScreen = () => {
       });
       i++;
     }
-    console.log(data);
-    // setFilteredDataSource(data);
-    // setLoading(false);
-  };
 
-  getFruits();
+    setFilteredDataSource(data);
+  };
 
   const renderItem = ({ item }) => (
     <Item
       id={item.id}
       name={item.name}
       description={item.description}
+      nutrients={item.nutrients}
       onPress={onPress}
       selected={selectedArray[item.id]}
     />
@@ -154,11 +168,11 @@ const FoodScreen = () => {
         keyExtractor={(item) => item.id}
       />
       <TouchableHighlight
-        style={styles.item}
+        style={styles.submit}
         underlayColor="#6cae75"
         onPress={onSubmit}
       >
-        <Text>Submit</Text>
+        <Text style={{ fontSize: 20 }}>Submit</Text>
       </TouchableHighlight>
       <Backbutton customStyles={{ position: "absolute", top: 48, left: 24 }} />
     </SafeAreaView>
@@ -213,12 +227,26 @@ const styles = StyleSheet.create({
   subtext: {
     width: 200,
   },
+  nutrientsWrapper: {
+    flexDirection: "row",
+  },
+  nutrients: {
+    fontSize: 10,
+  },
   searchbar: {
     height: 50,
     width: "75%",
     backgroundColor: "white",
     borderWidth: 1,
     borderColor: "#8bbd8b",
+    borderRadius: 10,
+  },
+  submit: {
+    justifyContent: "center",
+    backgroundColor: "#6cae75",
+    padding: 10,
+    paddingHorizontal: 20,
+    marginVertical: 8,
     borderRadius: 10,
   },
 });
