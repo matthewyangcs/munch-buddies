@@ -48,7 +48,8 @@ const Item = ({ id, name, description, nutrients, onPress, selected }) => {
   );
 };
 
-const FoodScreen = () => {
+const FoodScreen = ({ route }) => {
+  const { username } = route.params;
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);
@@ -147,7 +148,7 @@ const FoodScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.screenTitle}>SCREEN TITLE HERE</Text>
+      <Text style={styles.screenTitle}>Hi {username}, let's munch!</Text>
 
       <TextInput
         style={styles.searchbar}
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   screenTitle: {
+    justifyContent: "center",
     fontSize: 30,
     margin: 20,
     marginTop: 100,
