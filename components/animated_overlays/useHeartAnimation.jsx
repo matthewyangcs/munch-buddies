@@ -1,21 +1,31 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 
-const useShowOnClick = (setShow, time) => {
+const useShowOnClick = (time) => {
   const [show, setShow] = useState(false);
-  const [id, setId] = useState(null);
+  const id = useRef(null);
+
+  useEffect(() => {
+    return () => clearInterval(id.current);
+  }, []);
 
   const onClick = useCallback(() => {
-    if (id) {
-      clearInterval(id);
-    }
     if (show) {
       return;
     }
 
-    setShow(true);
-    const nextId = setInterval(() => setShow(false), time);
-    setId(nextId);
-  }, [time]);
+    if (id.current) {
+      clearInterval(id.current);
+    }
 
-  return show, onClick;
+    setShow(true);
+    const nextId = setInterval(() => setShow(() => false), time);
+    id.current = nextId;
+  }, [time, show]);
+
+  return {
+    show: show,
+    onClick: onClick,
+  };
 };
+
+export default useShowOnClick;

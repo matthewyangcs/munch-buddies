@@ -7,51 +7,62 @@ import { Images } from "../../assets/Images";
 import { fadeInOut } from "./animations";
 
 const Heart = ({ x, y, loop, show }) => {
-  const opacityAnm = useRef(new Animated.Value(0)).current;
-  const posAnm = useRef(new Animated.Value(0)).current;
-
+  const opacityAnmRef = useRef(new Animated.Value(0));
+  const opacityAnm = opacityAnmRef.current;
+  const posAnmRef = useRef(new Animated.Value(0));
+  const posAnm = posAnmRef.current;
   useEffect(() => {
     if (!show) {
-      opacityAnm.current = new Animated.Value(0);
-      posAnm.current = new Animated.Value(0);
+      opacityAnmRef.current = new Animated.Value(0);
+      posAnmRef.current = new Animated.Value(0);
       return;
     }
+  }, [show]);
 
+  useEffect(() => {
     fadeInOut(opacityAnm, 1000, 1200, loop).start();
 
     Animated.timing(posAnm, {
       toValue: 1,
       duration: 1800,
-      easing: Easing.bezier(0.1, 0.1, 0.3, 0.3)
+      easing: Easing.bezier(0.1, 0.1, 0.3, 0.3),
+      useNativeDriver: true,
     }).start();
-  }, [x, y, loop, show]);
+  }, [show]);
+
+  const ty = posAnm.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -50],
+  });
+
+  const tx = posAnm.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 50],
+  });
 
   return (
     <Animated.View
       style={[
         styles.heartContainer,
+        {},
         {
+          top: y,
+          left: x,
           transform: [
             {
-              translateY: posAnm.interpolate({
-                inputRange: [0, 1],
-                outputRange: [y, y - 50]
-              })
+              translateY: ty,
             },
             {
-              translateX: posAnm.interpolate({
-                inputRange: [0, 1],
-                outputRange: [x, x + 80]
-              })
-            }
+              translateX: tx,
+            },
           ],
-          zIndex: 999
-        }
+          zIndex: 9999,
+        },
       ]}
     >
       <Animated.View
         style={{
-          opacity: opacityAnm
+          opacity: opacityAnm,
         }}
       >
         <View>
@@ -59,7 +70,7 @@ const Heart = ({ x, y, loop, show }) => {
             source={Images.heart}
             style={{
               height: 25,
-              width: 25
+              width: 25,
             }}
           />
         </View>
@@ -70,8 +81,8 @@ const Heart = ({ x, y, loop, show }) => {
 
 const styles = StyleSheet.create({
   heartContainer: {
-    position: "absolute"
-  }
+    position: "absolute",
+  },
 });
 
 export default Heart;
