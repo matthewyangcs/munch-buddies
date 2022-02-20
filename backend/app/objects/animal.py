@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class Nickname(Enum):
-    BEAR = "Magnesium Bear"
+    BEAR = "Vitamin-B Bear"
     CAT = "Vitamin Cat"
     DEER = "Iron Deer"
     DOG = "Vitamin Dog"
@@ -33,7 +33,7 @@ class Animal:
         self.display_name = display_name or Nickname[id_]
         self.valid_nutrients: set[Nutrient] = valid_nutrients
         self.level: int = level
-        self.progress: float = progress
+        self.progress: int = progress
         self.food_history: list[Food] = []
         self.unlocked: bool = unlocked
         self.description: str = description
@@ -42,7 +42,7 @@ class Animal:
     ## Private Methods
     def _level_up_req(self):
         """Returns how much progress is needed for next level"""
-        return self.level
+        return 50 * self.level
 
     #######################
     ## Public APIs below
@@ -58,7 +58,7 @@ class Animal:
         if not self.can_eat(food):
             return False
         self.food_history.append(food)
-        self.progress += quantity * food.size
+        self.progress += 50 * quantity * food.size
         while self.progress >= self._level_up_req():
             self.progress -= self._level_up_req()
             self.level += 1
