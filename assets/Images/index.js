@@ -51,16 +51,16 @@ export const Images = {
     raccoon2: require("../2/RACCOON.png"),
 
     wolf3: require("../3/WOLF.png"),
-    cat3: require("../2/CAT.png"),
+    cat3: require("../3/CAT.png"),
     skunk3: require("../3/SKUNK.png"),
-    bear3: require("../2/BEAR.png"),
+    bear3: require("../3/BEAR.png"),
     sheep3: require("../3/SHEEP.png"),
-    tiger3: require("../2/TIGER.png"),
-    deer3: require("../2/DEER.png"),
+    tiger3: require("../3/TIGER.png"),
+    deer3: require("../3/DEER.png"),
     panda3: require("../3/PANDA.png"),
-    dog3: require("../2/DOG.png"),
-    fox3: require("../2/FOX.png"),
-    raccoon3: require("../2/RACCOON.png")
+    dog3: require("../3/DOG.png"),
+    fox3: require("../3/FOX.png"),
+    raccoon3: require("../3/RACCOON.png")
   },
   external: {
     loginBackground: require("./login-background.png")

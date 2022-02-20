@@ -102,7 +102,7 @@ ANIMAL_NAME_TO_OBJ: dict[str, Animal] = {
     Nickname.DEER.name: Animal(
         Nickname.DEER.name,
         valid_nutrients={Nutrient.ANTIOXIDANT},
-        description="Antioxidants may sound scary, but they protect our bodies from diseasese like cancer. Antioxidant deer loves finding wild blueberries in the forest.",
+        description="Antioxidants may sound scary, but they protect our bodies from diseases like cancer. Antioxidant deer loves finding wild blueberries in the forest.",
     ),
     Nickname.DOG.name: Animal(
         Nickname.DOG.name,
