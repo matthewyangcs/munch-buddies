@@ -121,6 +121,8 @@ const FoodScreen = ({ route }) => {
       },
       body: JSON.stringify(body),
     });
+    setSelectedArray(new Array(6).fill(false));
+    setSelectedData(new Set());
 
     navigation.navigate("FeedScreen");
   };
